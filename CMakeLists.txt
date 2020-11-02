@@ -7,6 +7,8 @@ include_directories(
 	mDNSMacOSX
 	mDNSPosix
 	DSO
+
+	${CMAKE_SOURCE_DIR}/${DARLING_SDK_RELATIVE_PATH}/usr/include/libarchive
 )
 
 add_compile_definitions(
@@ -59,107 +61,107 @@ target_compile_definitions(system_dnssd PRIVATE
 
 install(TARGETS system_dnssd DESTINATION libexec/darling/usr/lib/system)
 
-##
-## mDNSResponder binary
-##
-## not currently built because we're missing libnetwork
-##
-#add_darling_executable(mDNSResponder
-#	DSO/dso-transport.c
-#	DSO/dso.c
-#	mDNSCore/CryptoAlg.c
-#	mDNSCore/DNSCommon.c
-#	mDNSCore/DNSDigest.c
-#	mDNSCore/dnsproxy.c
-#	mDNSCore/dnssec.c
-#	mDNSCore/mDNS.c
-#	mDNSCore/nsec.c
-#	mDNSCore/nsec3.c
-#	mDNSCore/uDNS.c
-#	mDNSMacOSX/BLE.c
-#	mDNSMacOSX/coreBLE.m
-#	mDNSMacOSX/CryptoSupport.c
-#	mDNSMacOSX/D2D.c
-#	mDNSMacOSX/daemon.c
-#	mDNSMacOSX/DNS64.c
-#	mDNSMacOSX/DNSProxySupport.c
-#	mDNSMacOSX/dnssd_server.c
-#	mDNSMacOSX/dnssd_xpc.c
-#	mDNSMacOSX/DNSSECSupport.c
-#	mDNSMacOSX/helper-stubs.c
-#	mDNSMacOSX/LegacyNATTraversal.c
-#	mDNSMacOSX/mdns_object.m
-#	mDNSMacOSX/mdns.c
-#	mDNSMacOSX/mDNSMacOSX.c
-#	mDNSMacOSX/Metrics.m
-#	mDNSMacOSX/SymptomReporter.c
-#	mDNSMacOSX/uDNSPathEvalulation.c
-#	mDNSMacOSX/utilities/system_utilities.c
-#	mDNSMacOSX/xpc_services/xpc_service_dns_proxy.c
-#	mDNSMacOSX/xpc_services/xpc_service_log_utility.c
-#	mDNSMacOSX/xpc_services/xpc_services.c
-#	mDNSPosix/posix_utilities.c
-#	mDNSShared/ClientRequests.c
-#	mDNSShared/dnssd_clientshim.c
-#	mDNSShared/dnssd_ipc.c
-#	mDNSShared/mDNSDebug.c
-#	mDNSShared/PlatformCommon.c
-#	mDNSShared/uds_daemon.c
-#)
 #
-#target_link_libraries(mDNSResponder
-#	archive
-#	CoreFoundation
-#	Foundation
-#	IOKit
-#	Security
-#	SystemConfiguration
-#	icucore
-#	libxml2
-#	libnetwork
+# mDNSResponder binary
 #
-#	system
-#)
-#
+add_darling_executable(mDNSResponder
+	DSO/dso-transport.c
+	DSO/dso.c
+	mDNSCore/CryptoAlg.c
+	mDNSCore/DNSCommon.c
+	mDNSCore/DNSDigest.c
+	mDNSCore/dnsproxy.c
+	mDNSCore/dnssec.c
+	mDNSCore/mDNS.c
+	mDNSCore/nsec.c
+	mDNSCore/nsec3.c
+	mDNSCore/uDNS.c
+	mDNSMacOSX/BLE.c
+	mDNSMacOSX/coreBLE.m
+	mDNSMacOSX/CryptoSupport.c
+	mDNSMacOSX/D2D.c
+	mDNSMacOSX/daemon.c
+	mDNSMacOSX/DNS64.c
+	mDNSMacOSX/DNSProxySupport.c
+	mDNSMacOSX/dnssd_server.c
+	mDNSMacOSX/dnssd_xpc.c
+	mDNSMacOSX/DNSSECSupport.c
+	mDNSMacOSX/helper-stubs.c
+	mDNSMacOSX/LegacyNATTraversal.c
+	mDNSMacOSX/mdns_object.m
+	mDNSMacOSX/mdns.c
+	mDNSMacOSX/mDNSMacOSX.c
+	mDNSMacOSX/Metrics.m
+	mDNSMacOSX/SymptomReporter.c
+	mDNSMacOSX/uDNSPathEvalulation.c
+	mDNSMacOSX/utilities/system_utilities.c
+	mDNSMacOSX/xpc_services/xpc_service_dns_proxy.c
+	mDNSMacOSX/xpc_services/xpc_service_log_utility.c
+	mDNSMacOSX/xpc_services/xpc_services.c
+	mDNSPosix/posix_utilities.c
+	mDNSShared/ClientRequests.c
+	mDNSShared/dnssd_clientshim.c
+	mDNSShared/dnssd_ipc.c
+	mDNSShared/mDNSDebug.c
+	mDNSShared/PlatformCommon.c
+	mDNSShared/uds_daemon.c
+)
+
+target_link_libraries(mDNSResponder
+	archive
+	CoreFoundation
+	Foundation
+	IOKit
+	Security
+	SystemConfiguration
+	icucore
+	xml2
+	libnetwork
+
+	system
+)
+
+# the Xcode project says ObjC ARC is enabled for this target, but the actual code doesn't build with ARC enabled...
 #target_compile_options(mDNSResponder PRIVATE
 #	-fobjc-arc
 #)
+
+target_compile_definitions(mDNSResponder PRIVATE
+	MDNSRESPONDER_PLATFORM_APPLE=1
+	DSO_USES_NETWORK_FRAMEWORK
+)
+
+target_include_directories(mDNSResponder PRIVATE
+	mDNSMacOSX/utilities
+	mDNSMacOSX/xpc_services
+)
+
+install(FILES mDNSShared/mDNSResponder.8 DESTINATION libexec/darling/usr/share/man/man8)
+install(FILES mDNSMacOSX/com.apple.mDNSResponder.plist DESTINATION libexec/darling/System/Library/LaunchDaemons)
+install(TARGETS mDNSResponder DESTINATION libexec/darling/usr/sbin)
+
 #
-#target_compile_definitions(mDNSResponder PRIVATE
-#	MDNSRESPONDER_PLATFORM_APPLE=1
-#	#DSO_USES_NETWORK_FRAMEWORK # TODO: implement the Network framework
-#)
+# mDNSResponderHelper binary
 #
-#target_include_directories(mDNSResponder PRIVATE
-#	mDNSMacOSX/xpc_services
-#)
-#
-#install(FILES mDNSShared/mDNSResponder.8 DESTINATION libexec/darling/usr/share/man/man8)
-#install(FILES mDNSMacOSX/com.apple.mDNSResponder.plist DESTINATION libexec/darling/System/Library/LaunchDaemons)
-#install(TARGETS mDNSResponder DESTINATION libexec/darling/usr/sbin)
-#
-##
-## mDNSResponderHelper binary
-##
-#add_darling_executable(mDNSResponderHelper
-#	mDNSMacOSX/helper-main.c
-#	mDNSMacOSX/helper.c
-#	mDNSMacOSX/P2PPacketFilter.c
-#)
-#
-#target_link_libraries(mDNSResponderHelper
-#	IOKit
-#	bsm.0
-#	CoreFoundation
-#	SystemConfiguration
-#	Security
-#
-#	system
-#)
-#
-#install(FILES mDNSMacOSX/mDNSResponderHelper.8 DESTINATION libexec/darling/usr/share/man/man8)
-#install(FILES mDNSMacOSX/com.apple.mDNSResponderHelper.plist DESTINATION libexec/darling/System/Library/LaunchDaemons)
-#install(TARGETS mDNSResponderHelper DESTINATION libexec/darling/usr/sbin)
+add_darling_executable(mDNSResponderHelper
+	mDNSMacOSX/helper-main.c
+	mDNSMacOSX/helper.c
+	mDNSMacOSX/P2PPacketFilter.c
+)
+
+target_link_libraries(mDNSResponderHelper
+	IOKit
+	bsm.0
+	CoreFoundation
+	SystemConfiguration
+	Security
+
+	system
+)
+
+install(FILES mDNSMacOSX/mDNSResponderHelper.8 DESTINATION libexec/darling/usr/share/man/man8)
+install(FILES mDNSMacOSX/com.apple.mDNSResponderHelper.plist DESTINATION libexec/darling/System/Library/LaunchDaemons)
+install(TARGETS mDNSResponderHelper DESTINATION libexec/darling/usr/sbin)
 
 #
 # BonjourEvents plugin
