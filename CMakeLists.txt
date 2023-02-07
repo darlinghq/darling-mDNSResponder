@@ -65,36 +65,61 @@ install(TARGETS system_dnssd DESTINATION libexec/darling/usr/lib/system)
 # mDNSResponder binary
 #
 add_darling_executable(mDNSResponder
+	Clients/dnssdutil/DNSMessage.c
 	DSO/dso-transport.c
 	DSO/dso.c
-	mDNSCore/CryptoAlg.c
 	mDNSCore/DNSCommon.c
 	mDNSCore/DNSDigest.c
 	mDNSCore/dnsproxy.c
-	mDNSCore/dnssec.c
 	mDNSCore/mDNS.c
-	mDNSCore/nsec.c
-	mDNSCore/nsec3.c
 	mDNSCore/uDNS.c
 	mDNSMacOSX/BLE.c
 	mDNSMacOSX/coreBLE.m
-	mDNSMacOSX/CryptoSupport.c
 	mDNSMacOSX/D2D.c
 	mDNSMacOSX/daemon.c
 	mDNSMacOSX/DNS64.c
+	mDNSMacOSX/DNSHeuristics.m
 	mDNSMacOSX/DNSProxySupport.c
+	mDNSMacOSX/dnssd_analytics.c
 	mDNSMacOSX/dnssd_server.c
+	mDNSMacOSX/dnssd_svcb.c
 	mDNSMacOSX/dnssd_xpc.c
-	mDNSMacOSX/DNSSECSupport.c
+	mDNSMacOSX/dnssec_v2/dnssec_v2_client.c
+	mDNSMacOSX/dnssec_v2/dnssec_v2_crypto.c
+	mDNSMacOSX/dnssec_v2/dnssec_v2_helper.c
+	mDNSMacOSX/dnssec_v2/dnssec_v2_retrieval.c
+	mDNSMacOSX/dnssec_v2/dnssec_v2_structs.c
+	mDNSMacOSX/dnssec_v2/dnssec_v2_trust_anchor.c
+	mDNSMacOSX/dnssec_v2/dnssec_v2_validation.c
+	mDNSMacOSX/dnssec_v2/dnssec_v2.c
+	mDNSMacOSX/dnssec_v2/utilities/base_encoding/base_n.c
+	mDNSMacOSX/dnssec_v2/utilities/list/list.c
 	mDNSMacOSX/helper-stubs.c
+	mDNSMacOSX/HTTPUtilities.m
 	mDNSMacOSX/LegacyNATTraversal.c
-	mDNSMacOSX/mdns_object.m
-	mDNSMacOSX/mdns.c
+	mDNSMacOSX/mdns_objects/mdns_address.c
+	mDNSMacOSX/mdns_objects/mdns_dns_service.c
+	mDNSMacOSX/mdns_objects/mdns_helpers.c
+	mDNSMacOSX/mdns_objects/mdns_interface_monitor.c
+	mDNSMacOSX/mdns_objects/mdns_managed_defaults.c
+	mDNSMacOSX/mdns_objects/mdns_message.c
+	mDNSMacOSX/mdns_objects/mdns_object.c
+	mDNSMacOSX/mdns_objects/mdns_objects.m
+	mDNSMacOSX/mdns_objects/mdns_powerlog.c
+	mDNSMacOSX/mdns_objects/mdns_resolver.c
+	mDNSMacOSX/mdns_objects/mdns_set.c
+	mDNSMacOSX/mdns_objects/mdns_symptoms.c
+	mDNSMacOSX/mdns_objects/mdns_tlv.c
+	mDNSMacOSX/mdns_objects/mdns_trust_checks.m
+	mDNSMacOSX/mdns_objects/mdns_trust.c
+	mDNSMacOSX/mdns_objects/mdns_xpc.c
 	mDNSMacOSX/mDNSMacOSX.c
 	mDNSMacOSX/Metrics.m
+	mDNSMacOSX/Private/advertising_proxy_services.c
+	mDNSMacOSX/QuerierSupport.c
 	mDNSMacOSX/SymptomReporter.c
-	mDNSMacOSX/uDNSPathEvalulation.c
-	mDNSMacOSX/utilities/system_utilities.c
+	mDNSMacOSX/uDNSPathEvaluation.c
+	mDNSMacOSX/utilities/system_utilities.m
 	mDNSMacOSX/xpc_services/xpc_service_dns_proxy.c
 	mDNSMacOSX/xpc_services/xpc_service_log_utility.c
 	mDNSMacOSX/xpc_services/xpc_services.c
@@ -147,6 +172,7 @@ add_darling_executable(mDNSResponderHelper
 	mDNSMacOSX/helper-main.c
 	mDNSMacOSX/helper.c
 	mDNSMacOSX/P2PPacketFilter.c
+	mDNSMacOSX/utilities/setup_assistant_helper.m
 )
 
 target_link_libraries(mDNSResponderHelper
